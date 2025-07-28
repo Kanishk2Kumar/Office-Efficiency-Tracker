@@ -1,9 +1,9 @@
 import React from 'react'
 
-const page = () => {
+const attendance = () => {
   return (
-    <div>page</div>
+    <div>attendance</div>
   )
 }
 
-export default page
+export default attendance
