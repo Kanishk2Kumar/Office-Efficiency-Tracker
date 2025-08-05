@@ -2,10 +2,12 @@ import mongoose from "mongoose";
 
 export const connectToDatabase = async () => {
   try {
-    if (!process.env.MONGO_URL) {
-      throw new Error("MONGO_URL is not defined in the environment variables");
+    if (!process.env.NEXT_PUBLIC_MONGO_URL) {
+      throw new Error(
+        "NEXT_PUBLIC_MONGO_URL is not defined in the environment variables"
+      );
     }
-    await mongoose.connect(process.env.MONGO_URL);
+    await mongoose.connect(process.env.NEXT_PUBLIC_MONGO_URL);
 
     mongoose.connection.on("connected", () => {
       console.log("MongoDB connection established successfully");

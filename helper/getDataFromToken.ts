@@ -8,7 +8,7 @@ export const getDataFromToken = async (req: NextRequest) => {
       throw new Error("No token provided");
     }
 
-    const decoded: any = jwt.verify(token, process.env.TOKEN_SECRET!);
+    const decoded: any = jwt.verify(token, process.env.NEXT_PUBLIC_TOKEN_SECRET!);
     return decoded.id;
   } catch (error) {
     throw new Error("Invalid token");
