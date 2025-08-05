@@ -31,6 +31,7 @@ import {
   IconGripVertical,
   IconLayoutColumns,
   IconLoader,
+  IconMail,
   IconPlus,
   IconTrendingUp,
 } from "@tabler/icons-react"
@@ -105,6 +106,17 @@ import {
   TabsList,
   TabsTrigger,
 } from "@/components/ui/tabs"
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog"
+import { useState } from "react"
+
 
 export const schema = z.object({
   id: z.number(),
@@ -400,6 +412,17 @@ export function DataTable({
       })
     }
   }
+  const [employeeName, setEmployeeName] = useState("")
+  const [employeeEmail, setEmployeeEmail] = useState("")
+
+  const handleSendInvite = () => {
+    // TODO: Add logic to submit the employee data
+    console.log("Invite sent to:", employeeName, employeeEmail)
+    // Optional: reset form
+    setEmployeeName("")
+    setEmployeeEmail("")
+  }
+
 
   return (
     <Tabs
@@ -462,10 +485,56 @@ export function DataTable({
                 })}
             </DropdownMenuContent>
           </DropdownMenu>
-          <Button variant="outline" size="sm">
-            <IconPlus />
-            <span className="hidden lg:inline">Add Employee</span>
-          </Button>
+          <Dialog>
+  <DialogTrigger asChild>
+    <Button variant="outline" size="sm">
+      <IconPlus className="mr-2 h-4 w-4" />
+      <span className="hidden lg:inline">Add Employee</span>
+    </Button>
+  </DialogTrigger>
+
+  <DialogContent className="sm:max-w-[425px]">
+    <DialogHeader>
+      <DialogTitle>Add New Employee</DialogTitle>
+    </DialogHeader>
+
+    <div className="grid gap-4 py-4">
+      <div className="grid grid-cols-4 items-center gap-4">
+        <Label htmlFor="name" className="text-right">
+          Name
+        </Label>
+        <Input
+          id="name"
+          value={employeeName}
+          onChange={(e) => setEmployeeName(e.target.value)}
+          className="col-span-3"
+          placeholder="Enter name"
+        />
+      </div>
+      <div className="grid grid-cols-4 items-center gap-4">
+        <Label htmlFor="email" className="text-right">
+          Email
+        </Label>
+        <Input
+          id="email"
+          type="email"
+          value={employeeEmail}
+          onChange={(e) => setEmployeeEmail(e.target.value)}
+          className="col-span-3"
+          placeholder="Enter email"
+        />
+      </div>
+    </div>
+
+    <DialogFooter>
+      <Button onClick={handleSendInvite}>
+        <IconMail className="mr-2 h-4 w-4" />
+        Send Invitation
+      </Button>
+    </DialogFooter>
+  </DialogContent>
+</Dialog>
+
         </div>
       </div>
       <TabsContent
