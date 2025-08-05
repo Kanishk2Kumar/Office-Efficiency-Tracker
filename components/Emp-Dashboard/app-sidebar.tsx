@@ -33,22 +33,27 @@ const data = {
   navMain: [
     {
       title: "Dashboard",
-      url: "/HR",
+      url: "/",
       icon: IconDashboard,
     },
     {
       title: "Task notifications",
-      url: "/HR/attendance",
+      url: "/Tasknotification",
       icon: IconListDetails,
     },
     {
       title: "Attendance",
-      url: "/HR/efficiencyTracking",
+      url: "/Attendance",
       icon: IconChartBar,
     },
     {
       title: "Notes and Requests",
-      url: "/HR/reports",
+      url: "/Note_Request",
+      icon: IconFolder,
+    },
+     {
+      title: "Report Submission",
+      url: "/Task_Report_Submission",
       icon: IconFolder,
     },
   ],
