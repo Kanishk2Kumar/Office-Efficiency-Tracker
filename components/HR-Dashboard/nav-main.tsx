@@ -37,10 +37,37 @@ export function NavMain({
   const [employeeEmail, setEmployeeEmail] = useState("")
   const [employeeName, setEmployeeName] = useState("")
 
-  const handleSendInvite = () => {
-    // You can send the data to backend here
-    console.log("Sending invite to:", { employeeName, employeeEmail })
+  const handleSendInvite = async () => {
+  try {
+    const res = await fetch("/api/hr/add-employee", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        name: employeeName,
+        email: employeeEmail,
+        levelOfAccess: "employee",
+      }),
+    })
+
+    const data = await res.json()
+
+    if (!res.ok) {
+      alert(data || "Something went wrong")
+      return
+    }
+
+    alert("Invitation sent successfully!")
+
+    // Optional: reset form
+    setEmployeeName("")
+    setEmployeeEmail("")
+  } catch (error) {
+    console.error("Invite failed:", error)
+    alert("Failed to send invite.")
   }
+}
 
   return (
     <SidebarGroup>
