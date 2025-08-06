@@ -29,6 +29,7 @@ export async function POST(req: NextRequest) {
     const tokenData = {
       id: user._id,
       email: user.email,
+      levelOfAccess: user.levelOfAccess,
     };
 
     const token = await jwt.sign(tokenData, process.env.NEXT_PUBLIC_TOKEN_SECRET!, {
@@ -46,7 +47,7 @@ export async function POST(req: NextRequest) {
 
     return response;
   } catch (error: any) {
-    console.error("Error in POST /api/users/login:", error);
+    console.error("Error in POST /api/users/sign-in:", error);
     return NextResponse.json(
       { error: "Internal Server Error" },
       { status: 500 }

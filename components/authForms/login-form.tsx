@@ -6,18 +6,44 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
+import toast from "react-hot-toast";
+import axios from "axios";
 
 export function LoginForm({
   className,
   ...props
 }: React.ComponentPropsWithoutRef<"form">) {
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
+  const [user, setUser] = useState({
+    email: "",
+    password: "",
+  });
   const [error, setError] = useState("");
   const router = useRouter();
+  const [loading, setLoading] = useState(false);
+
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setUser({ ...user, [e.target.name]: e.target.value });
+  };
 
   const handleSignIn = async (event: React.FormEvent) => {
-    console.log("Email:", email);
+    event.preventDefault();
+    setLoading(true);
+    try {
+      const response = await axios.post("/api/users/sign-in", user);
+      if (response.status === 200) {
+        toast.success("Login successful! Redirecting to login...");
+        router.push("/");
+      } else {
+        toast.error("Login failed");
+      }
+    } catch (error: any) {
+      console.error("Error during login:", error);
+      toast.error(error.response?.data?.message || "Login failed");
+      setError(error.response?.data?.message || "Login failed");
+      setUser({ email: "", password: "" });
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
@@ -38,10 +64,11 @@ export function LoginForm({
           <Input
             id="email"
             type="email"
+            name="email"
             placeholder="m@example.com"
             required
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
+            value={user.email}
+            onChange={handleChange}
           />
         </div>
         <div className="grid gap-2">
@@ -57,14 +84,15 @@ export function LoginForm({
           <Input
             id="password"
             type="password"
+            name="password"
             required
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
+            value={user.password}
+            onChange={handleChange}
           />
         </div>
         {error && <p className="text-red-500 text-sm">{error}</p>}
         <Button type="submit" className="w-full">
-          Login
+          {loading ? "Login..." : "Login"}
         </Button>
         <div className="relative text-center text-sm after:absolute after:inset-0 after:top-1/2 after:z-0 after:flex after:items-center after:border-t after:border-border">
           <span className="relative z-10 bg-background px-2 text-muted-foreground">
