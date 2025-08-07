@@ -1,9 +1,10 @@
 import React from 'react'
+import NotificationPage from '@/components/Emp-Dashboard/notification'
 
 const page = () => {
   return (
     <div>
-      notify
+      <NotificationPage />
     </div>
   )
 }
