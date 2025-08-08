@@ -30,6 +30,10 @@ const userSchema = new mongoose.Schema({
         type: String,
         default: "employee",
     },
+    department: {
+        type: String,
+        required: true
+    },
 })
 
 const User = mongoose.models.users || mongoose.model("users", userSchema);
