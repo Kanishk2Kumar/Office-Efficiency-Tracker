@@ -8,39 +8,51 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import toast from "react-hot-toast";
 import axios from "axios";
+import useUserStore from "@/store/userStore";
 
 export function LoginForm({
   className,
   ...props
 }: React.ComponentPropsWithoutRef<"form">) {
-  const [user, setUser] = useState({
-    email: "",
-    password: "",
-  });
+  const [userInput, setUserInput] = useState({ email: "", password: "" });
   const [error, setError] = useState("");
   const router = useRouter();
   const [loading, setLoading] = useState(false);
+  const setUser = useUserStore((state) => state.setUser);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setUser({ ...user, [e.target.name]: e.target.value });
+    setUserInput({ ...userInput, [e.target.name]: e.target.value });
   };
 
   const handleSignIn = async (event: React.FormEvent) => {
     event.preventDefault();
     setLoading(true);
     try {
-      const response = await axios.post("/api/users/sign-in", user);
-      if (response.status === 200) {
-        toast.success("Login successful! Redirecting to login...");
-        router.push("/");
-      } else {
-        toast.error("Login failed");
+      const { data } = await axios.post("/api/users/sign-in", userInput);
+
+      if (data.success) {
+        // Store in Zustand
+        setUser({
+          ...data.user,
+          details: data.details,
+        });
+
+        toast.success("Login successful!");
+
+        // Redirect based on role
+        if (data.user.levelOfAccess === "manager") {
+          router.push("/manager");
+        } else if (data.user.levelOfAccess === "hr") {
+          router.push("/hr");
+        } else {
+          router.push("/dashboard");
+        }
       }
     } catch (error: any) {
       console.error("Error during login:", error);
-      toast.error(error.response?.data?.message || "Login failed");
-      setError(error.response?.data?.message || "Login failed");
-      setUser({ email: "", password: "" });
+      toast.error(error.response?.data?.error || "Login failed");
+      setError(error.response?.data?.error || "Login failed");
+      setUserInput({ email: "", password: "" });
     } finally {
       setLoading(false);
     }
@@ -67,7 +79,7 @@ export function LoginForm({
             name="email"
             placeholder="m@example.com"
             required
-            value={user.email}
+            value={userInput.email}
             onChange={handleChange}
           />
         </div>
@@ -86,7 +98,7 @@ export function LoginForm({
             type="password"
             name="password"
             required
-            value={user.password}
+            value={userInput.password}
             onChange={handleChange}
           />
         </div>
