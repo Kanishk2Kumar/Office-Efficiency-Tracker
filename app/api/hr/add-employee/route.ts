@@ -25,7 +25,7 @@ function generatePassword(length: number = 8): string {
 export async function POST(req: NextRequest) {
   try {
     const reqBody = req.json();
-    const { email, name, levelOfAccess } = await reqBody;
+    const { email, name, levelOfAccess, department } = await reqBody;
 
     if (!email) {
       return NextResponse.json("Invalid input", { status: 400 });
@@ -44,6 +44,7 @@ export async function POST(req: NextRequest) {
       name,
       email,
       levelOfAccess,
+      department,
       password: hashedPassword,
     });
 
@@ -57,8 +58,9 @@ export async function POST(req: NextRequest) {
       user_name: name,
       user_email: email,
       user_password: newPassword,
-      login_link: `${process.env.DOMAIN}/sign-in` || "https://example.com/login",
-      company_email: process.env.NEXT_PUBLIC_COMPANY_EMAIL || ""
+      login_link:
+        `${process.env.DOMAIN}/sign-in` || "https://example.com/login",
+      company_email: process.env.NEXT_PUBLIC_COMPANY_EMAIL || "",
     });
 
     resend.emails.send({
